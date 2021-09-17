@@ -1,0 +1,86 @@
+.container {
+    // display: flex;
+    // flex-direction: column;
+    // align-items: center;
+    // width: 100%;
+    .uploadImages {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background: #f2f2f2;
+        border: 2px dashed #dddddd;
+        padding: 2rem 1rem;
+        margin-bottom: 11.5px;
+        // width: 100%;
+        user-select: none;
+        &.dragging {
+            background: #ffffff;
+            border-color: #1174dc;
+        }
+        &:hover {
+            background: #ffffff;
+            border-color: #1174dc;
+        }
+        .icon {
+            margin-bottom: 12px;
+        }
+        .text {
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 24px;
+            text-align: center;
+            color: #555555;
+            .highlight {
+                color: #1174dc;
+            }
+        }
+        .imageInput {
+            display: none;
+        }
+    }
+    .uploadedImages {
+        z-index: 2;
+        padding: 12px;
+        border: 1px solid #dddddd;
+        // width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        user-select: none;
+        .image {
+            margin: 0 4px 10px;
+            width: 80px;
+            height: 80px;
+            border: 1px solid #dddddd;
+            position: relative;
+            // padding: 1rem;
+            .deleteImageIcon {
+                cursor: pointer;
+                position: absolute;
+                right: 0;
+                transform: translate(5px, -5px);
+                // transform: translate(0.625rem, -1.5625rem);
+                background: #ffffff;
+                box-shadow: 0px 10px 31px rgba(0, 0, 0, 0.12);
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1;
+                &:hover {
+                    background: #f1f0f0;
+                }
+            }
+            .img {
+                position: relative;
+                width: 80px;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+    }
+}
