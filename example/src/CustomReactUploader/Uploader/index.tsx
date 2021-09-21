@@ -2,28 +2,32 @@ import React, { useRef, useState } from "react";
 import styles from "./styles.module.scss";
 // import UploadIconSvg from '@/assets/icons/wa-upload-icon.svg'
 // import MinusIconSvg from '@/assets/icons/wa-minus-icon.svg'
+// import XIconSvg from "@/assets/x-icon.svg";
 import { ReactComponent as UploadIconSvg } from "./assets/wa-upload-icon.svg";
 import { ReactComponent as MinusIconSvg } from "./assets/wa-minus-icon.svg";
+import { ReactComponent as XIconSvg } from "./assets/x-icon.svg";
 import {
   convertFileListToListOfFiles,
-  onDropImageToUpload,
+  onDropFileToUpload,
   onSelectImagesToUpload,
   onSelectImageToUpload,
 } from "./helpers/reader";
-import { UploadImageModel } from "./interface";
+import { UploadFileModel } from "./interface";
 export interface Props {
-  currentImages: UploadImageModel[];
-  updateCurrentImages: (images: UploadImageModel[]) => void;
+  currentFiles: UploadFileModel[];
+  updateCurrentFiles: (files: UploadFileModel[]) => void;
   onError: (message: string, file: File | undefined) => void;
   acceptFiles?: string[];
   renderText?: () => JSX.Element;
   multiple?: boolean
+  onlyShowFileInfo?: boolean
 }
 const UploadImages: React.FC<Props> = ({
-  currentImages,
-  updateCurrentImages,
+  currentFiles,
+  updateCurrentFiles,
   onError,
   acceptFiles = ["png", "jpg", "jpeg"],
+  onlyShowFileInfo = false,
   renderText = () => {
     return (
       <span>
@@ -36,14 +40,14 @@ const UploadImages: React.FC<Props> = ({
   },
   multiple = false
 }) => {
-  const imageUploadInputRef = useRef<HTMLInputElement>(null);
+  const fileUploadInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setDraggingStatus] = useState(false);
-  const onClickUploadImages = () => {
-    imageUploadInputRef.current?.click();
+  const onClickUploadFiles = () => {
+    fileUploadInputRef.current?.click();
   };
-  const removeUploadImage = (img: UploadImageModel) => {
-    updateCurrentImages(
-      currentImages.filter((ui) => ui.fileName !== img.fileName)
+  const removeUploadFile = (img: UploadFileModel) => {
+    updateCurrentFiles(
+      currentFiles.filter((ui) => ui.fileName !== img.fileName)
     );
   };
   const onDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
@@ -68,10 +72,10 @@ const UploadImages: React.FC<Props> = ({
     setDraggingStatus(false);
     const files = e.dataTransfer.files;
     if (files) {
-      onDropImageToUpload(
+      onDropFileToUpload(
         convertFileListToListOfFiles(files),
-        currentImages,
-        updateCurrentImages,
+        currentFiles,
+        updateCurrentFiles,
         onError
       );
     }
@@ -82,7 +86,7 @@ const UploadImages: React.FC<Props> = ({
         className={`${styles.uploadImages} ${
           isDragging ? styles.dragging : ""
         }`}
-        onClick={onClickUploadImages}
+        onClick={onClickUploadFiles}
         onDragEnter={onDragEnter}
         onDragLeave={onDragLeave}
         onDragOver={onDragOver}
@@ -94,13 +98,13 @@ const UploadImages: React.FC<Props> = ({
         <div className={styles.text}>{renderText()}</div>
         {multiple ?
         <input
-        ref={imageUploadInputRef}
+        ref={fileUploadInputRef}
         className={styles.imageInput}
         onChange={(e) =>
             onSelectImagesToUpload(
             e,
-            currentImages,
-            updateCurrentImages,
+            currentFiles,
+            updateCurrentFiles,
             onError
           )
         }
@@ -110,13 +114,13 @@ const UploadImages: React.FC<Props> = ({
       />
         :
         <input
-          ref={imageUploadInputRef}
+          ref={fileUploadInputRef}
           className={styles.imageInput}
           onChange={(e) =>
             onSelectImageToUpload(
               e,
-              currentImages,
-              updateCurrentImages,
+              currentFiles,
+              updateCurrentFiles,
               onError
             )
           }
@@ -126,20 +130,29 @@ const UploadImages: React.FC<Props> = ({
         }
         
       </div>
-      {currentImages.length > 0 && (
+      {currentFiles.length > 0 && (
         <div className={styles.uploadedImages}>
-          {currentImages.map((ui) => (
+          {currentFiles.map((ui) => (
             <div
-              key={Math.random() * 8888 + "custom-react-uploader"}
-              className={styles.image}
+              key={Math.random() * 8888 + "_custom-react-uploader"}
+              className={`${styles.image} ${onlyShowFileInfo ? styles.info : ''}`}
             >
-              <div
+              {onlyShowFileInfo ? 
+               <div
+               className={styles.removeFileIcon}
+               onClick={() => removeUploadFile(ui)}
+             >
+               <XIconSvg />
+             </div>
+              :<div
                 className={styles.deleteImageIcon}
-                onClick={() => removeUploadImage(ui)}
+                onClick={() => removeUploadFile(ui)}
               >
                 <MinusIconSvg />
-              </div>
+              </div>}
+              {onlyShowFileInfo ? <div className={styles.fileName}>{ui.fileName}</div> :
               <img alt="icon" className={styles.img} src={ui.file ?? ui.url} />
+              }
             </div>
           ))}
         </div>

@@ -1,4 +1,4 @@
-export interface UploadImageModel {
+export interface UploadFileModel {
     file?: any
     fileName: string
     blob: any

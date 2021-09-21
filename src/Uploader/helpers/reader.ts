@@ -1,9 +1,9 @@
-import { UploadImageModel } from '../interface'
+import { UploadFileModel } from '../interface'
 
 export const onSelectImageToUpload = (
   e: React.ChangeEvent<HTMLInputElement>,
-  currentImages: UploadImageModel[],
-  updateImages: (newImages: UploadImageModel[]) => void,
+  currentFiles: UploadFileModel[],
+  updateFiles: (newFiles: UploadFileModel[]) => void,
   onError: (message: string, file: File | undefined) => void
 ): void => {
   try {
@@ -17,9 +17,9 @@ export const onSelectImageToUpload = (
       const readerAsDataURL = new FileReader()
       readerAsDataURL.onload = (e) => {
         if (e && e.target !== null) {
-          const uploadImage = e.target.result
+          const uploadFile = e.target.result
           if (
-            currentImages
+            currentFiles
               .filter((i) => i.isUploaded === false)
               .map((i) => i.fileName)
               .includes(blobFile.name)
@@ -28,15 +28,15 @@ export const onSelectImageToUpload = (
             return
           }
           const newList = [
-            ...currentImages,
+            ...currentFiles,
             {
               fileName: blobFile.name,
-              file: uploadImage,
+              file: uploadFile,
               blob: blobFile,
               isUploaded: false,
-            } as UploadImageModel,
+            } as UploadFileModel,
           ]
-          updateImages(newList)
+          updateFiles(newList)
         }
       }
       readerAsDataURL.readAsDataURL(blobFile)
@@ -48,15 +48,15 @@ export const onSelectImageToUpload = (
 
 export const onSelectImagesToUpload = (
   e: React.ChangeEvent<HTMLInputElement>,
-  currentImages: UploadImageModel[],
-  updateImages: (newImages: UploadImageModel[]) => void,
+  currentFiles: UploadFileModel[],
+  updateFiles: (newFiles: UploadFileModel[]) => void,
   onError: (message: string, file: File | undefined) => void
 ): void => {
   try {
     if (e.target.files !== null) {
       const files = e.target.files as any
       const length = files.length
-      let result: UploadImageModel[] = []
+      let result: UploadFileModel[] = []
       for (let idx = 0; idx < length; idx++) {
         const blobFile = files[idx]
         if (blobFile === undefined) {
@@ -66,9 +66,9 @@ export const onSelectImagesToUpload = (
         const readerAsDataURL = new FileReader()
         readerAsDataURL.onload = (e) => {
           if (e && e.target !== null) {
-            const uploadImage = e.target.result
+            const uploadFile = e.target.result
             if (
-              currentImages
+              currentFiles
                 .filter((i) => i.isUploaded === false)
                 .map((i) => i.fileName)
                 .includes(blobFile.name)
@@ -77,10 +77,10 @@ export const onSelectImagesToUpload = (
             } else {
               result.push({
                 fileName: blobFile.name,
-                file: uploadImage,
+                file: uploadFile,
                 blob: blobFile,
                 isUploaded: false,
-              } as UploadImageModel)
+              } as UploadFileModel)
             }
             
           }
@@ -89,8 +89,8 @@ export const onSelectImagesToUpload = (
       }
       const sync = () => {
         if (result.length === length) {
-          updateImages([
-        ...currentImages,
+          updateFiles([
+        ...currentFiles,
         ...result
       ])
         } else {
@@ -118,18 +118,18 @@ export const convertFileListToListOfFiles = (fileList: FileList) => {
   return result
 }
 
-export const onDropImageToUpload = (
-  images: File[],
-  currentImages: UploadImageModel[],
-  updateImages: (newImages: UploadImageModel[]) => void,
+export const onDropFileToUpload = (
+  files: File[],
+  currentFiles: UploadFileModel[],
+  updateFiles: (newFiles: UploadFileModel[]) => void,
   onError: (message: string, file: File) => void
 ): void => {
   try {
-    const newImageModels: UploadImageModel[] = []
-    if (images.length > 0) {
-      images.forEach((blobFile) => {
+    const newFileModels: UploadFileModel[] = []
+    if (files.length > 0) {
+      files.forEach((blobFile) => {
         if (
-          currentImages
+          currentFiles
             .filter((i) => i.isUploaded === false)
             .map((i) => i.fileName)
             .includes(blobFile.name)
@@ -141,23 +141,23 @@ export const onDropImageToUpload = (
         reader.readAsDataURL(blobFile);
         reader.onloadend = function () {
           const base64data = reader.result;
-          newImageModels.push(
+          newFileModels.push(
             {
               fileName: blobFile.name,
               file: base64data,
               blob: blobFile,
               isUploaded: false,
-            } as UploadImageModel,
+            } as UploadFileModel,
           )
         }
 
       })
     }
     const sync = () => {
-      if (newImageModels.length === images.length) {
-        updateImages([
-          ...currentImages,
-          ...newImageModels
+      if (newFileModels.length === files.length) {
+        updateFiles([
+          ...currentFiles,
+          ...newFileModels
         ])
       } else {
         setTimeout(() => {
