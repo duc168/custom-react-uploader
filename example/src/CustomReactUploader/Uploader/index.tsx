@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import styles from "./styles.module.scss";
-// import UploadIconSvg from '@/assets/icons/wa-upload-icon.svg'
-// import MinusIconSvg from '@/assets/icons/wa-minus-icon.svg'
-// import XIconSvg from "@/assets/x-icon.svg";
+// import UploadIconSvg from './assets/wa-upload-icon.svg'
+// import MinusIconSvg from './assets/wa-minus-icon.svg'
+// import XIconSvg from "./assets/x-icon.svg";
 import { ReactComponent as UploadIconSvg } from "./assets/wa-upload-icon.svg";
 import { ReactComponent as MinusIconSvg } from "./assets/wa-minus-icon.svg";
 import { ReactComponent as XIconSvg } from "./assets/x-icon.svg";

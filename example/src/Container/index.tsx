@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
-// import Uploader, { UploadImageModel }  from 'custom-react-uploader'
-import Uploader, { UploadFileModel } from '../CustomReactUploader'
+import Uploader, { UploadFileModel }  from 'custom-react-uploader'
+// import Uploader, { UploadFileModel } from '../CustomReactUploader'
 import styles from './styles.module.scss'
 const Container: React.FC<any> = () => {
     const containerRef = useRef(null)
