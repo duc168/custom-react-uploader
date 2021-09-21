@@ -12,7 +12,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
-    "custom-react-uploader": "^0.0.4",
+    "custom-react-uploader": "^0.0.5",
     "date-fns": "^2.23.0",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
