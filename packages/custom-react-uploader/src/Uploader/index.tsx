@@ -3,14 +3,11 @@ import styles from "./styles.module.scss";
 import UploadIconSvg from './assets/wa-upload-icon.svg'
 import MinusIconSvg from './assets/wa-minus-icon.svg'
 import XIconSvg from "./assets/x-icon.svg";
-// import { ReactComponent as UploadIconSvg } from "./assets/wa-upload-icon.svg";
-// import { ReactComponent as MinusIconSvg } from "./assets/wa-minus-icon.svg";
-// import { ReactComponent as XIconSvg } from "./assets/x-icon.svg";
 import {
   convertFileListToListOfFiles,
   onDropFileToUpload,
-  onSelectImagesToUpload,
-  onSelectImageToUpload,
+  onSelectFilesToUpload,
+  onSelectFileToUpload,
 } from "./helpers/reader";
 import { UploadFileModel } from "./interface";
 export interface Props {
@@ -101,7 +98,7 @@ const UploadImages: React.FC<Props> = ({
         ref={fileUploadInputRef}
         className={styles.imageInput}
         onChange={(e) =>
-            onSelectImagesToUpload(
+            onSelectFilesToUpload(
             e,
             currentFiles,
             updateCurrentFiles,
@@ -117,7 +114,7 @@ const UploadImages: React.FC<Props> = ({
           ref={fileUploadInputRef}
           className={styles.imageInput}
           onChange={(e) =>
-            onSelectImageToUpload(
+            onSelectFileToUpload(
               e,
               currentFiles,
               updateCurrentFiles,

@@ -94,7 +94,7 @@ function __spreadArray(to, from) {
     return to;
 }
 
-var onSelectImageToUpload = function (e, currentFiles, updateFiles, onError) {
+var onSelectFileToUpload = function (e, currentFiles, updateFiles, onError) {
     try {
         if (e.target.files !== null) {
             var files = e.target.files;
@@ -132,7 +132,7 @@ var onSelectImageToUpload = function (e, currentFiles, updateFiles, onError) {
         console.log(error);
     }
 };
-var onSelectImagesToUpload = function (e, currentFiles, updateFiles, onError) {
+var onSelectFilesToUpload = function (e, currentFiles, updateFiles, onError) {
     try {
         if (e.target.files !== null) {
             var files = e.target.files;
@@ -239,6 +239,49 @@ var onDropFileToUpload = function (files, currentFiles, updateFiles, onError) {
         console.log(error);
     }
 };
+var getBlobFromUrl = function (url) {
+    return new Promise(function (resolve, reject) {
+        try {
+            var request_1 = new XMLHttpRequest();
+            request_1.open('GET', url, true);
+            request_1.responseType = 'blob';
+            request_1.onload = function () {
+                resolve(request_1.response);
+            };
+            request_1.send();
+        }
+        catch (error) {
+            reject(error);
+        }
+    });
+};
+var convertUrlToUploadFileModel$1 = function (inputUrl, defaultFileName) {
+    if (defaultFileName === void 0) { defaultFileName = ''; }
+    return new Promise(function (resolve, reject) {
+        try {
+            var reader_1 = new FileReader();
+            getBlobFromUrl(inputUrl).then(function (blobFile) {
+                reader_1.readAsDataURL(blobFile);
+                reader_1.onloadend = function () {
+                    var _a;
+                    var base64data = reader_1.result;
+                    console.log(blobFile, inputUrl);
+                    resolve({
+                        fileName: (_a = blobFile.name) !== null && _a !== void 0 ? _a : defaultFileName,
+                        file: base64data,
+                        blob: blobFile,
+                        isUploaded: false,
+                    });
+                };
+            }).catch(function (err) {
+                reject(err);
+            });
+        }
+        catch (error) {
+            reject(error);
+        }
+    });
+};
 
 var UploadImages = function (_a) {
     var currentFiles = _a.currentFiles, updateCurrentFiles = _a.updateCurrentFiles, onError = _a.onError, _b = _a.acceptFiles, acceptFiles = _b === void 0 ? ["png", "jpg", "jpeg"] : _b, _c = _a.onlyShowFileInfo, onlyShowFileInfo = _c === void 0 ? false : _c, _d = _a.renderText, renderText = _d === void 0 ? function () {
@@ -293,11 +336,11 @@ var UploadImages = function (_a) {
             React.createElement("div", { className: styles.text }, renderText()),
             multiple ?
                 React.createElement("input", { ref: fileUploadInputRef, className: styles.imageInput, onChange: function (e) {
-                        return onSelectImagesToUpload(e, currentFiles, updateCurrentFiles, onError);
+                        return onSelectFilesToUpload(e, currentFiles, updateCurrentFiles, onError);
                     }, type: "file", multiple: true, accept: acceptFiles.map(function (a) { return "." + a; }).join(", ") })
                 :
                     React.createElement("input", { ref: fileUploadInputRef, className: styles.imageInput, onChange: function (e) {
-                            return onSelectImageToUpload(e, currentFiles, updateCurrentFiles, onError);
+                            return onSelectFileToUpload(e, currentFiles, updateCurrentFiles, onError);
                         }, type: "file", accept: acceptFiles.map(function (a) { return "." + a; }).join(", ") })),
         currentFiles.length > 0 && (React.createElement("div", { className: styles.uploadedImages }, currentFiles.map(function (ui) {
             var _a;
@@ -312,5 +355,7 @@ var UploadImages = function (_a) {
         })))));
 };
 
-export { UploadImages as default };
+var convertUrlToUploadFileModel = convertUrlToUploadFileModel$1;
+
+export { convertUrlToUploadFileModel, UploadImages as default };
 //# sourceMappingURL=index.js.map

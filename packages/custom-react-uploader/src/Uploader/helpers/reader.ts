@@ -1,6 +1,6 @@
 import { UploadFileModel } from '../interface'
 
-export const onSelectImageToUpload = (
+export const onSelectFileToUpload = (
   e: React.ChangeEvent<HTMLInputElement>,
   currentFiles: UploadFileModel[],
   updateFiles: (newFiles: UploadFileModel[]) => void,
@@ -46,7 +46,7 @@ export const onSelectImageToUpload = (
   }
 }
 
-export const onSelectImagesToUpload = (
+export const onSelectFilesToUpload = (
   e: React.ChangeEvent<HTMLInputElement>,
   currentFiles: UploadFileModel[],
   updateFiles: (newFiles: UploadFileModel[]) => void,
@@ -82,7 +82,7 @@ export const onSelectImagesToUpload = (
                 isUploaded: false,
               } as UploadFileModel)
             }
-            
+
           }
         }
         readerAsDataURL.readAsDataURL(blobFile)
@@ -90,9 +90,9 @@ export const onSelectImagesToUpload = (
       const sync = () => {
         if (result.length === length) {
           updateFiles([
-        ...currentFiles,
-        ...result
-      ])
+            ...currentFiles,
+            ...result
+          ])
         } else {
           setTimeout(() => {
             sync()
@@ -100,7 +100,7 @@ export const onSelectImagesToUpload = (
         }
       }
       sync()
-      
+
     }
   } catch (error) {
     console.log(error)
@@ -169,4 +169,47 @@ export const onDropFileToUpload = (
   } catch (error) {
     console.log(error)
   }
+}
+
+export const getBlobFromUrl = (url: string): Promise<File> => {
+  return new Promise((resolve, reject) => {
+    try {
+      const request = new XMLHttpRequest();
+      request.open('GET', url, true);
+      request.responseType = 'blob';
+      request.onload = function () {        
+        resolve(request.response)
+      };
+      request.send();
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+
+export const convertUrlToUploadFileModel = (inputUrl: string, defaultFileName: string = ''): Promise<UploadFileModel> => {
+  return new Promise((resolve, reject) => {
+    try {
+      const reader = new FileReader();
+      getBlobFromUrl(inputUrl).then(blobFile => {
+        reader.readAsDataURL(blobFile);
+        reader.onloadend = function () {
+          const base64data = reader.result;
+          console.log(blobFile, inputUrl)
+          resolve({
+            fileName: blobFile.name ?? defaultFileName,
+            file: base64data,
+            blob: blobFile,
+            isUploaded: false,
+          })
+        }
+      }).catch((err) => {
+        reject(err)
+      })
+      
+    } catch (error) {
+      reject(error)
+    }
+  })
 }
