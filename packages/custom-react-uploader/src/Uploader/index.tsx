@@ -28,7 +28,7 @@ const UploadImages: React.FC<Props> = ({
   renderText = () => {
     return (
       <span>
-        Drag and drop JPG / PNG files here<br /> <i>or</i>{" "} <br />
+        Drag and drop JPG or PNG files here<br /> <i>or</i>{" "} <br />
         <span className={styles.highlight}>
           Click to select files from your device
         </span>
