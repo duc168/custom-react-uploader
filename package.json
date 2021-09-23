@@ -35,9 +35,10 @@
     "typescript": "4.3.5"
   },
   "scripts": {
+    "prestart": "lerna bootstrap",
     "start": "lerna run start --parallel",
-    "stop": "taskkill -F -IM node.exe",
-    "kill": "kill-port --port 3000",
+    "kill-all": "taskkill -F -IM node.exe",
+    "stop": "kill-port --port 3000",
     "build-package": "lerna run --scope custom-react-uploader build-pro",
     "build": "npm run build-package",
     "remove-all-node-modules": "rm -rf node_modules && rm -rf packages/custom-react-uploader/node_modules && rm -rf packages/example/node_modules"
