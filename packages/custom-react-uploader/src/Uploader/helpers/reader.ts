@@ -188,25 +188,38 @@ export const getBlobFromUrl = (url: string): Promise<File> => {
 }
 
 
-export const convertUrlToUploadFileModel = (inputUrl: string, defaultFileName: string = ''): Promise<UploadFileModel> => {
+export const convertUrlToUploadFileModel = (input: string, defaultFileName: string = '', isUploaded: boolean = false): Promise<UploadFileModel> => {
   return new Promise((resolve, reject) => {
     try {
       const reader = new FileReader();
-      getBlobFromUrl(inputUrl).then(blobFile => {
-        reader.readAsDataURL(blobFile);
-        reader.onloadend = function () {
-          const base64data = reader.result;
-          console.log(blobFile, inputUrl)
-          resolve({
-            fileName: blobFile.name ?? defaultFileName,
-            file: base64data,
-            blob: blobFile,
-            isUploaded: false,
-          })
-        }
-      }).catch((err) => {
-        reject(err)
-      })
+      const isUrl = input.includes('http')
+      if (isUrl) {
+        const inputUrl = input
+        getBlobFromUrl(inputUrl).then(blobFile => {
+          reader.readAsDataURL(blobFile);
+          reader.onloadend = function () {
+            const base64data = reader.result;
+            console.log(blobFile, inputUrl)
+            resolve({
+              fileName: blobFile.name ?? defaultFileName,
+              file: base64data,
+              blob: blobFile,
+              isUploaded: isUploaded,
+            })
+          }
+        }).catch((err) => {
+          reject(err)
+        })
+      } else {
+        const inputBlob = input
+        resolve({
+          fileName: defaultFileName,
+          file: inputBlob,
+          blob: inputBlob,
+          isUploaded: isUploaded,
+        })
+      }
+      
       
     } catch (error) {
       reject(error)

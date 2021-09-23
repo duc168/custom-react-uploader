@@ -255,27 +255,41 @@ var getBlobFromUrl = function (url) {
         }
     });
 };
-var convertUrlToUploadFileModel$1 = function (inputUrl, defaultFileName) {
+var convertUrlToUploadFileModel$1 = function (input, defaultFileName, isUploaded) {
     if (defaultFileName === void 0) { defaultFileName = ''; }
+    if (isUploaded === void 0) { isUploaded = false; }
     return new Promise(function (resolve, reject) {
         try {
             var reader_1 = new FileReader();
-            getBlobFromUrl(inputUrl).then(function (blobFile) {
-                reader_1.readAsDataURL(blobFile);
-                reader_1.onloadend = function () {
-                    var _a;
-                    var base64data = reader_1.result;
-                    console.log(blobFile, inputUrl);
-                    resolve({
-                        fileName: (_a = blobFile.name) !== null && _a !== void 0 ? _a : defaultFileName,
-                        file: base64data,
-                        blob: blobFile,
-                        isUploaded: false,
-                    });
-                };
-            }).catch(function (err) {
-                reject(err);
-            });
+            var isUrl = input.includes('http');
+            if (isUrl) {
+                var inputUrl_1 = input;
+                getBlobFromUrl(inputUrl_1).then(function (blobFile) {
+                    reader_1.readAsDataURL(blobFile);
+                    reader_1.onloadend = function () {
+                        var _a;
+                        var base64data = reader_1.result;
+                        console.log(blobFile, inputUrl_1);
+                        resolve({
+                            fileName: (_a = blobFile.name) !== null && _a !== void 0 ? _a : defaultFileName,
+                            file: base64data,
+                            blob: blobFile,
+                            isUploaded: isUploaded,
+                        });
+                    };
+                }).catch(function (err) {
+                    reject(err);
+                });
+            }
+            else {
+                var inputBlob = input;
+                resolve({
+                    fileName: defaultFileName,
+                    file: inputBlob,
+                    blob: inputBlob,
+                    isUploaded: isUploaded,
+                });
+            }
         }
         catch (error) {
             reject(error);
