@@ -6,8 +6,15 @@ import postcss from "rollup-plugin-postcss";
 import reactSvg from "rollup-plugin-react-svg";
 import dts from 'rollup-plugin-dts'
 
-const packageJson = require("./package.json");
-
+const isDev = process.env.ROLLUP_ENV === 'development'
+const isProd = process.env.ROLLUP_ENV === 'production'
+const packageJson = isDev ?
+  require("./package.json") :
+  (
+    isProd
+      ? require("./package-pro.json")
+      : require("./package.json")
+  );
 export default [
   {
     input: "src/index.tsx",
@@ -33,21 +40,21 @@ export default [
           plugins: [], // passed to svgo
           multipass: true
         },
-   
+
         // whether to output jsx
         jsx: false,
-   
+
         // include: string
         include: null,
-   
+
         // exclude: string
         exclude: null
       }),
       typescript({ useTsconfigDeclarationDir: true }),
       postcss({
-          extract: false,
-          modules: true,
-          use: ['sass'],
+        extract: false,
+        modules: true,
+        use: ['sass'],
       }),
       // svgr()
     ],

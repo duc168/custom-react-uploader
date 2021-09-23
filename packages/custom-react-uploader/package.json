@@ -1,11 +1,11 @@
 {
   "name": "custom-react-uploader",
-  "version": "0.0.6",
+  "version": "0.0.5",
   "main": "./lib/cjs/index.js",
   "mainType": "./lib/cjs/index.d.ts",
   "module": "./lib/esm/index.js",
   "moduleType": "./lib/esm/index.d.ts",
-  "types": "./lib/esm/index.d.ts",
+  "types": "./lib/esm/index.d.ts",  
   "license": "MIT",
   "keywords": [
     "custom",
@@ -22,8 +22,6 @@
     "@rollup/plugin-node-resolve": "13.0.4",
     "@types/react": "17.0.19",
     "@types/react-dom": "17.0.9",
-    "kill-port": "1.6.1",
-    "lerna": "4.0.0",
     "postcss": "8.3.6",
     "rollup": "2.56.2",
     "rollup-plugin-dts": "4.0.0",
@@ -35,12 +33,11 @@
     "typescript": "4.3.5"
   },
   "scripts": {
-    "start": "lerna run start --parallel",
-    "stop": "taskkill -F -IM node.exe",
-    "kill": "kill-port --port 3000",
-    "build-package": "lerna run --scope custom-react-uploader build-pro",
-    "build": "npm run build-package",
-    "remove-all-node-modules": "rm -rf node_modules && rm -rf packages/custom-react-uploader/node_modules && rm -rf packages/example/node_modules"
+    "start": "rollup --environment ROLLUP_ENV:development -c -w",
+    "build-pro": "rollup --environment IS_PRODUCTION,ROLLUP_ENV:production -c",
+    "build-tsc": "rm -rf lib && yarn build:cjs && yarn build:esm",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "build:esm": "tsc"
   },
   "peerDependencies": {
     "react": "^17.0.2",
