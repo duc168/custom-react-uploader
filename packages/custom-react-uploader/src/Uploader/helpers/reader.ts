@@ -192,16 +192,13 @@ export const convertUrlToUploadFileModel = (input: string, defaultFileName: stri
   return new Promise((resolve, reject) => {
     try {
       const reader = new FileReader();
-      const isUrl = input.includes('http')
-      if (isUrl) {
-        const inputUrl = input
+        const inputUrl = input + ''
         getBlobFromUrl(inputUrl).then(blobFile => {
           reader.readAsDataURL(blobFile);
           reader.onloadend = function () {
             const base64data = reader.result;
-            console.log(blobFile, inputUrl)
             resolve({
-              fileName: blobFile.name ?? defaultFileName,
+              fileName: blobFile.name ?? defaultFileName + '',
               file: base64data,
               blob: blobFile,
               isUploaded: isUploaded,
@@ -210,17 +207,6 @@ export const convertUrlToUploadFileModel = (input: string, defaultFileName: stri
         }).catch((err) => {
           reject(err)
         })
-      } else {
-        const inputBlob = input
-        resolve({
-          fileName: defaultFileName,
-          file: inputBlob,
-          blob: inputBlob,
-          isUploaded: isUploaded,
-        })
-      }
-      
-      
     } catch (error) {
       reject(error)
     }

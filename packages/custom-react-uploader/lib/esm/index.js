@@ -261,35 +261,22 @@ var convertUrlToUploadFileModel$1 = function (input, defaultFileName, isUploaded
     return new Promise(function (resolve, reject) {
         try {
             var reader_1 = new FileReader();
-            var isUrl = input.includes('http');
-            if (isUrl) {
-                var inputUrl_1 = input;
-                getBlobFromUrl(inputUrl_1).then(function (blobFile) {
-                    reader_1.readAsDataURL(blobFile);
-                    reader_1.onloadend = function () {
-                        var _a;
-                        var base64data = reader_1.result;
-                        console.log(blobFile, inputUrl_1);
-                        resolve({
-                            fileName: (_a = blobFile.name) !== null && _a !== void 0 ? _a : defaultFileName,
-                            file: base64data,
-                            blob: blobFile,
-                            isUploaded: isUploaded,
-                        });
-                    };
-                }).catch(function (err) {
-                    reject(err);
-                });
-            }
-            else {
-                var inputBlob = input;
-                resolve({
-                    fileName: defaultFileName,
-                    file: inputBlob,
-                    blob: inputBlob,
-                    isUploaded: isUploaded,
-                });
-            }
+            var inputUrl = input + '';
+            getBlobFromUrl(inputUrl).then(function (blobFile) {
+                reader_1.readAsDataURL(blobFile);
+                reader_1.onloadend = function () {
+                    var _a;
+                    var base64data = reader_1.result;
+                    resolve({
+                        fileName: (_a = blobFile.name) !== null && _a !== void 0 ? _a : defaultFileName + '',
+                        file: base64data,
+                        blob: blobFile,
+                        isUploaded: isUploaded,
+                    });
+                };
+            }).catch(function (err) {
+                reject(err);
+            });
         }
         catch (error) {
             reject(error);
