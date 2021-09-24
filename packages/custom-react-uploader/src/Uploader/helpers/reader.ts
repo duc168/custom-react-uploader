@@ -212,3 +212,64 @@ export const convertUrlToUploadFileModel = (input: string, defaultFileName: stri
     }
   })
 }
+
+
+
+let currentSetTimeoutId: any
+type UpdateUploadFileType = 'SHOW' | 'HIDE'
+let orderedList: { fileUrl: string, value:  string | number }[] = [] 
+let checkList: ({
+  fileUrl: string,
+  value: UploadFileModel | number
+})[] = []
+export const updateFileAsync = async (fileUrl: string, onSuccess: (type: UpdateUploadFileType, data?: UploadFileModel) => void) => {
+  if (currentSetTimeoutId) {
+    clearTimeout(currentSetTimeoutId)
+    currentSetTimeoutId = undefined    
+  }  
+  if (fileUrl.length === 0) {
+    checkList.push({
+      fileUrl,
+      value: 123
+    })
+    orderedList.push({
+      fileUrl,
+      value: 123
+    })
+  } else {
+    orderedList.push({
+      fileUrl,
+      value: 'HAS_VALUE'
+    })
+    const result = await convertUrlToUploadFileModel(fileUrl)
+    checkList.push({
+      fileUrl,
+      value: result
+    })
+  }
+  currentSetTimeoutId = setTimeout(() => {    
+    if (checkList.length > 0) {
+      const lastItem = orderedList[orderedList.length - 1]
+      if (lastItem) {
+        const theActualLastItem = checkList.find(f => f.fileUrl === lastItem.fileUrl)
+        if (theActualLastItem) {
+          if (typeof theActualLastItem.value === 'number') {
+            onSuccess('HIDE')
+          } else {
+            onSuccess('SHOW', theActualLastItem.value)    
+          }
+        } else {
+          onSuccess('HIDE')    
+        }        
+      } else {
+        onSuccess('HIDE')  
+      }      
+    } else {
+      onSuccess('HIDE')
+    }
+    checkList = []
+    clearTimeout(currentSetTimeoutId)
+    currentSetTimeoutId = undefined
+    orderedList = []
+  }, 250)
+}

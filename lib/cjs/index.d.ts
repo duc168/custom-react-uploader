@@ -23,6 +23,7 @@ declare const UploadImages: React.FC<Props$1>;
 declare type Props = Props$1;
 declare type UploadFileModel = UploadFileModel$1;
 declare const convertUrlToUploadFileModel: (input: string, defaultFileName?: string, isUploaded?: boolean) => Promise<UploadFileModel$1>;
+declare const updateFileAsync: (fileUrl: string, onSuccess: (type: "SHOW" | "HIDE", data?: UploadFileModel$1 | undefined) => void) => Promise<void>;
 
-export { Props, UploadFileModel, convertUrlToUploadFileModel, UploadImages as default };
+export { Props, UploadFileModel, convertUrlToUploadFileModel, UploadImages as default, updateFileAsync };
 //# sourceMappingURL=index.d.ts.map
