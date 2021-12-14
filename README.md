@@ -29,7 +29,7 @@ export default Container
 
 ## Development
 1. Git clone the project ``https://github.com/duc168/custom-react-uploader.git``
-2. Install lerna globally if you have not installed lerna yet, run ``yarn add lerna -g``
+2. Install lerna globally if you have not installed lerna yet, run ``yarn global add lerna``
 3. Run ``yarn`` to install the first packages
 4. ``yarn start`` to start developing
 5. ``yarn stop`` to stop developing
